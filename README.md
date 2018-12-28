@@ -6,6 +6,7 @@ Copyright of Xena : The Regents of the University of California, Santa Cruz.
 
 # Example :
 ```Python
+import xenaPython as xena
 from TCGAlib.TCGAlib import load_TCGA
 
 host = xena.PUBLIC_HUBS['gdcHub']
