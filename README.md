@@ -10,8 +10,11 @@ Copyright of Xena : The Regents of the University of California, Santa Cruz.
 import xenaPython as xena
 from TCGAlib.TCGAlib import load_TCGA
 
+### Host (GDC TCGA)
 host = xena.PUBLIC_HUBS['gdcHub']
+### Project name
 prjID = 'TCGA-SKCM'
+### Cohort name
 cohort = ['GDC TCGA Melanoma (SKCM)']
 
 tcga = load_TCGA(host, cohort, prjID)
