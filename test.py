@@ -12,8 +12,6 @@ prj_arr_el = [x.split('-') for x in prj_arr]
 cohort_arr = [y for i,item in enumerate(prj_arr_el) for y in xena.all_cohorts(host, exclude=['genomicVector']) if y.find(item[0])>-1 and y.find(item[1])>-1]
 """
 
-
-host = xena.PUBLIC_HUBS['gdcHub']
 prjID = 'TCGA-SKCM'
 cohort = ['GDC TCGA Melanoma (SKCM)']
 
