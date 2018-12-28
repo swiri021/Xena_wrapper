@@ -4,7 +4,8 @@ Copyright of Xena : The Regents of the University of California, Santa Cruz.
 
 Python class for wrapping xenaPython,
 
-Example :
+# Example :
+
 from TCGAlib.TCGAlib import load_TCGA
 
 host = xena.PUBLIC_HUBS['gdcHub']
