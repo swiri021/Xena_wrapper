@@ -16,6 +16,9 @@ tcga = load_TCGA(host, cohort, prjID)
 input_list=['9480', '367', '2137']
 
 tcga_expr = tcga.get_TCGA_expr(input_list)
+
 tcga_cnv = tcga.get_TCGA_cnv(input_list)
+
 tcga_mut = tcga.get_TCGA_mut(input_list)
+
 tcga_surv = tcga.get_TCGA_surv()
