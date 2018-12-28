@@ -22,7 +22,7 @@ tcga = load_TCGA(host, cohort, prjID)
 # Input shoud be EntrezID
 input_list=['9480', '367', '2137']
 
-# Getting expression
+# Getting expression(FPKM)
 tcga_expr = tcga.get_TCGA_expr(input_list)
 # Getting CNV
 tcga_cnv = tcga.get_TCGA_cnv(input_list)
