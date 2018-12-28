@@ -19,7 +19,7 @@ cohort = ['GDC TCGA Melanoma (SKCM)']
 
 tcga = load_TCGA(host, cohort, prjID)
 
-# return df
+# return df, FPKM(NOT FPKM-UQ)
 tcga_expr = tcga.get_TCGA_expr(input_list=['9480', '367', '2137'])
 
 # return df, there are duplicated samples, but take the first.
