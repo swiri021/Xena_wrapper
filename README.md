@@ -23,5 +23,6 @@ tcga_expr = tcga.get_TCGA_expr(input_list)
 tcga_cnv = tcga.get_TCGA_cnv(input_list)
 # Getting Mutation
 tcga_mut = tcga.get_TCGA_mut(input_list)
+# Getting Survival
 tcga_surv = tcga.get_TCGA_surv()
 ```
