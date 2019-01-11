@@ -1,12 +1,50 @@
 import xenaPython as xena
 import pandas as pd
 import numpy as np
+import functools
 
 
+## Decorator for Error Warning
+class warning_decorator(object):
+	def __init__(self,func_type=0):
+		self.func_type = func_type
+
+	def __call__(self, func):
+		func_type =self.func_type
+
+		@functools.wraps(func)
+		def wrapper(*args, **kwargs):
+			## ID mapper warning
+			if func_type==0:
+				try:
+					#self.func(self, *args)
+					values = func(*args, **kwargs)
+					return values
+				except:
+					#raise
+					raise ValueError("Cannot find EntrezIDs in ID set, Please insert correct EntrezIDs or other EntrezIDs")
+
+			## Main function warning( Expr , CNV )
+			elif func_type==1:
+				values = func(*args, **kwargs)
+				if values.empty:
+					raise ValueError("There is no dataset with your list, Please use other EntrezIDs")
+				else:
+					return values
+
+			## Main function warning( Mut )
+			elif func_type==2:
+				values = func(*args, **kwargs)
+				if values==[]:
+					raise ValueError("There is no dataset with your list, Please use other EntrezIDs")
+				else:
+					return values
+		return wrapper
 
 class load_TCGA:
 
-	def id_mapper_to_entrez(self, df):
+	@warning_decorator(func_type=0)
+	def id_mapper_to_entrez(self, df, input_list):
 		#### ID mapping
 		en_ids = pd.read_csv('TCGAlib/dataset/ID_table_homo_sapiens_20181211.csv').set_index('EnsemblID')[['EntrezID']]
 		en_ids = en_ids[~en_ids.index.duplicated(keep='first')]
@@ -19,9 +57,9 @@ class load_TCGA:
 		id_map = id_map[~id_map.index.duplicated(keep='first')]
 		id_map.index = id_map.index.astype(int).astype(str)
 
-		return id_map
+		return id_map.loc[input_list]
 
-
+	@warning_decorator(func_type=1)
 	def get_TCGA_expr(self, input_list):
 		samples = xena.cohort_samples(self.host, [self.cohort], None) #### All Sample selection
 
@@ -31,18 +69,17 @@ class load_TCGA:
 		xena_transcript_df['EnsemblID_edit'] = xena_transcript_df['EnsemblID'].apply(lambda x : x.split('.')[0])
 		xena_transcript_df = xena_transcript_df.set_index('EnsemblID_edit')
 
-		#### ID mapping
-		id_map = self.id_mapper_to_entrez(xena_transcript_df)
-
-		#### Get Ensembl ID from EntrezID
-		id_map = id_map.loc[input_list]
+		#### ID mapping & Get Ensembl ID from EntrezID
+		id_map = self.id_mapper_to_entrez(xena_transcript_df, input_list)
 
 		#### Retreive values from Xena
 		values = xena.dataset_fetch(self.host, self.expr_dataset, samples, id_map['EnsemblID'].values.tolist()) # list of lists
-		xena_df = pd.DataFrame(data=values, index=input_list, columns=samples)
+		#xena_df = pd.DataFrame(data=values, index=input_list, columns=samples)
 
-		return pd.DataFrame(data=values, index=input_list, columns=samples).T.astype(float)
+		xena_df = pd.DataFrame(data=values, index=input_list, columns=samples).T.astype(float)
+		return xena_df
 
+	@warning_decorator(func_type=1)
 	def get_TCGA_cnv(self, input_list):
 
 		samples = xena.cohort_samples(self.host, self.cohort, None) #### All Sample selection
@@ -51,10 +88,9 @@ class load_TCGA:
 		pos_df = pd.read_csv('TCGAlib/dataset/position_info_hg38.csv', index_col=0)
 
 		#### ID mapping
-		id_map = self.id_mapper_to_entrez(pos_df)
+		id_map = self.id_mapper_to_entrez(pos_df, input_list)
 
 		#### Get Ensembl ID from EntrezID
-		id_map = id_map.loc[input_list]
 		id_map['chr'] = id_map['chr'].apply(lambda x:'chr'+x)
 		id_map['start'].astype(int)
 		id_map['end'].astype(int)
@@ -76,6 +112,7 @@ class load_TCGA:
 
 		return cnv_df
 
+	@warning_decorator(func_type=2)
 	def get_TCGA_mut(self, input_list):
 
 		samples = xena.cohort_samples(self.host, self.cohort, None) #### All Sample selection
@@ -84,10 +121,9 @@ class load_TCGA:
 		pos_df = pd.read_csv('TCGAlib/dataset/position_info_hg38.csv', index_col=0)
 
 		#### ID mapping
-		id_map = self.id_mapper_to_entrez(pos_df)
+		id_map = self.id_mapper_to_entrez(pos_df, input_list)
 
 		#### Get Ensembl ID from EntrezID
-		id_map = id_map.loc[input_list]
 		id_map['chr'] = id_map['chr'].apply(lambda x:'chr'+x)
 		id_map['start'].astype(int)
 		id_map['end'].astype(int)
