@@ -146,8 +146,20 @@ class load_TCGA:
 		self.host = host
 		self.cohort=user_cohort
 
+		#####finding cohort
+		prj_arr = [x['name'].split('/')[0] for x in xena.all_datasets(host) if x['name'].split('/')[0].find('TCGA')!=-1]
+		prj_arr = list(set(prj_arr))
+		prj_arr_el = [x.split('-') for x in prj_arr]
+		cohort_arr = [y for i,item in enumerate(prj_arr_el) for y in xena.all_cohorts(host, exclude=['genomicVector']) if y.find(item[0])>-1 and y.find(item[1])>-1]
+
+		if user_cohort not in cohort_arr:
+			raise ValueError("Cannot find PROJECT ID, please change prjID(example : TCGA-SKCM")
+		if prjID not in prj_arr:
+			raise ValueError("Cannot find COHORT, please change cohort(example : GDC TCGA Melanoma (SKCM)")
+
 		self.cnv_dataset='%s/Xena_Matrices/%s.masked_cnv.tsv'%(prjID,prjID)
 		self.surv_dataset = '%s/Xena_Matrices/%s.survival.tsv'%(prjID,prjID)
 		self.expr_dataset = '%s/Xena_Matrices/%s.htseq_fpkm.tsv'%(prjID,prjID)
 		self.mut_dataset = '%s/Xena_Matrices/%s.mutect2_snv.tsv'%(prjID,prjID)
+
 		print self.host, self.cohort, prjID
