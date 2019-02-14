@@ -15,7 +15,7 @@ host = xena.PUBLIC_HUBS['gdcHub']
 ### Project name
 prjID = 'TCGA-SKCM'
 ### Cohort name
-cohort = ['GDC TCGA Melanoma (SKCM)']
+cohort = 'GDC TCGA Melanoma (SKCM)'
 
 tcga = load_TCGA(host, cohort, prjID)
 
