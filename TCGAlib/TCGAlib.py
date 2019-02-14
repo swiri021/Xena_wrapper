@@ -153,9 +153,9 @@ class load_TCGA:
 		cohort_arr = [y for i,item in enumerate(prj_arr_el) for y in xena.all_cohorts(host, exclude=['genomicVector']) if y.find(item[0])>-1 and y.find(item[1])>-1]
 
 		if user_cohort not in cohort_arr:
-			raise ValueError("Cannot find PROJECT ID, please change prjID(example : TCGA-SKCM")
-		if prjID not in prj_arr:
 			raise ValueError("Cannot find COHORT, please change cohort(example : GDC TCGA Melanoma (SKCM)")
+		if prjID not in prj_arr:
+			raise ValueError("Cannot find PROJECT ID, please change prjID(example : TCGA-SKCM")
 
 		self.cnv_dataset='%s/Xena_Matrices/%s.masked_cnv.tsv'%(prjID,prjID)
 		self.surv_dataset = '%s/Xena_Matrices/%s.survival.tsv'%(prjID,prjID)
