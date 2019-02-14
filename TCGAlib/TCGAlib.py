@@ -56,8 +56,14 @@ class load_TCGA:
 		id_map = id_map[id_map.index.notnull()]
 		id_map = id_map[~id_map.index.duplicated(keep='first')]
 		id_map.index = id_map.index.astype(int).astype(str)
+		
+		id_map = id_map.loc[input_list]
+		id_map = id_map.dropna()
 
-		return id_map.loc[input_list]
+		if id_map.empty:
+			raise ValueError("Cannot find EntrezIDs in ID set, Please insert correct EntrezIDs or other EntrezIDs")
+
+		return id_map
 
 	@warning_decorator(func_type=1)
 	def get_TCGA_expr(self, input_list):
