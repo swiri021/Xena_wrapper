@@ -13,7 +13,7 @@ cohort_arr = [y for i,item in enumerate(prj_arr_el) for y in xena.all_cohorts(ho
 """
 
 prjID = 'TCGA-SKCM'
-cohort = ['GDC TCGA Melanoma (SKCM)']
+cohort = 'GDC TCGA Melanoma (SKCM)'
 
 tcga = load_TCGA(host, cohort, prjID)
 
