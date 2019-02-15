@@ -107,9 +107,10 @@ class load_TCGA:
 		for i,item in enumerate(input_list):
 			temp_df = pd.DataFrame(data=values[i]['rows']['value'], columns=[item], index=values[i]['rows']['sampleID'])
 
-			####There are duplicated samples in Xena, don't know the reason.
-			temp_df = temp_df[~temp_df.index.duplicated(keep='first')].loc[samples]
-			cnv_arr.append(temp_df)
+			if not temp_df.empty:
+				####There are duplicated samples in Xena, don't know the reason.
+				temp_df = temp_df[~temp_df.index.duplicated(keep='first')].loc[samples]
+				cnv_arr.append(temp_df)
 
 		if len(input_list)==1:
 			cnv_df = cnv_arr[0].astype(float)
