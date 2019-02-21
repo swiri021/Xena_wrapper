@@ -137,7 +137,7 @@ class load_TCGA:
 
 		#### Retreive values from Xena
 		values = [xena.sparse_data_range(self.host, self.mut_dataset, samples, id_map['chr'].loc[el], id_map['start'].loc[el], id_map['end'].loc[el]) for el in id_map.index.tolist()]
-		result_arr = [pd.DataFrame(data=[values[i]['rows']['amino-acid'], values[i]['rows']['effect']], columns=values[i]['rows']['sampleID'], index=[item+'_AAC', item+'_Effect']).T for i,item in enumerate(input_list)]
+		result_arr = [pd.DataFrame(data=[values[i]['rows']['amino-acid'], values[i]['rows']['effect']], columns=values[i]['rows']['sampleID'], index=[item+'_AAC', item+'_Effect']).T for i,item in enumerate(id_map.index.tolist())]
 		#mut_df = pd.concat(result_arr, axis=1)
 
 		return result_arr
